@@ -43,6 +43,7 @@ from psutil.tests import skip_on_not_implemented
 from psutil.tests import SYSMEM_TOLERANCE
 from psutil.tests import ThreadTask
 from psutil.tests import TRAVIS
+from psutil.tests import GITHUB_WHEELS
 from psutil.tests import unittest
 from psutil.tests import which
 
@@ -1365,6 +1366,7 @@ class TestMisc(PsutilTestCase):
             psutil.PROCFS_PATH = "/proc"
 
     @retry_on_failure()
+    @unittest.skipIf(GITHUB_WHEELS, "Skip test on wheel build")
     def test_issue_687(self):
         # In case of thread ID:
         # - pid_exists() is supposed to return False

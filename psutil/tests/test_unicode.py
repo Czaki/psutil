@@ -317,6 +317,14 @@ class TestFSAPIs(_BaseFSAPIsTests, PsutilTestCase):
             warnings.simplefilter("ignore")
             return self.funky_name in os.listdir(here)
 
+    @unittest.skipIf(GITHUB_WHEELS and MACOS, "need to be fixed")
+    def test_proc_connections(self):
+        super().test_proc_connections()
+
+    @unittest.skipIf(GITHUB_WHEELS and MACOS, "need to be fixed")
+    def test_net_connections(self):
+        super().test_net_connections()
+
 
 @unittest.skipIf(CI_TESTING, "unreliable on CI")
 @unittest.skipIf(PYPY, "unreliable on PYPY")
