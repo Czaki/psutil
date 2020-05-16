@@ -1366,6 +1366,7 @@ class TestProcess(PsutilTestCase):
             d.pop("PSUTIL_TESTING", None)
             d.pop("PLAT", None)
             d.pop("HOME", None)
+            d.pop("__PYVENV_LAUNCHER__", None)
             if MACOS:
                 d.pop("__CF_USER_TEXT_ENCODING", None)
                 d.pop("VERSIONER_PYTHON_PREFER_32_BIT", None)
