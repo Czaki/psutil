@@ -91,7 +91,7 @@ class TestAvailConstantsAPIs(PsutilTestCase):
                 self.assertEqual(x, False)
         else:
             ae = self.assertEqual
-            
+
         ae(hasattr(psutil, "RLIM_INFINITY"), LINUX)
         ae(hasattr(psutil, "RLIMIT_AS"), LINUX)
         ae(hasattr(psutil, "RLIMIT_CORE"), LINUX)
@@ -154,7 +154,6 @@ class TestAvailProcessAPIs(PsutilTestCase):
     def test_ionice(self):
         self.assertEqual(hasattr(psutil.Process, "ionice"), LINUX or WINDOWS)
 
-    
     def test_rlimit(self):
         # requires Linux 2.6.36
         # Temporary xfail to get wheels build process pass
