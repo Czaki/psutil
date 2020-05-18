@@ -747,7 +747,9 @@ class TestNetAPIs(PsutilTestCase):
                 self.assertIsInstance(addr.netmask, (str, type(None)))
                 self.assertIsInstance(addr.broadcast, (str, type(None)))
                 self.assertIn(addr.family, families)
-                if sys.version_info >= (3, 4):
+                # second part is bugfix for pypy
+                if sys.version_info >= (3, 4) and not\
+                        (MACOS and PYPY and addr.family == 18):
                     self.assertIsInstance(addr.family, enum.IntEnum)
                 if nic_stats[nic].isup:
                     # Do not test binding to addresses of interfaces

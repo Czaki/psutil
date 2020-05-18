@@ -46,6 +46,7 @@ from psutil.tests import SKIP_SYSCONS
 from psutil.tests import unittest
 from psutil.tests import VALID_PROC_STATUSES
 from psutil.tests import GITHUB_WHEELS
+from psutil.tests import PYPY
 import psutil
 
 
@@ -257,7 +258,8 @@ class TestSystemAPITypes(PsutilTestCase):
         for ifname, addrs in psutil.net_if_addrs().items():
             self.assertIsInstance(ifname, str)
             for addr in addrs:
-                if enum is not None:
+                if enum is not None and not\
+                        (MACOS and PYPY and addr.family == 18):
                     self.assertIsInstance(addr.family, enum.IntEnum)
                 else:
                     self.assertIsInstance(addr.family, int)
