@@ -1271,7 +1271,11 @@ class TestProcess(PsutilTestCase):
             assert_raises_nsp(fun, name)
 
         # NtQuerySystemInformation succeeds even if process is gone.
-        if WINDOWS:
+        # https://docs.python.org/3/whatsnew/3.7.html#notable-changes-in-python-3-7-2
+        if WINDOWS and not \
+                (os.environ.get("VIRTUAL_ENV", False) and
+                    sys.version_info.major == 3 and
+                    sys.version_info.minor > 6):
             normcase = os.path.normcase
             self.assertEqual(normcase(p.exe()), normcase(PYTHON_EXE))
 

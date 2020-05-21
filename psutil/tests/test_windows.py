@@ -513,6 +513,11 @@ class TestProcessWMI(TestCase):
         p = psutil.Process(self.pid)
         self.assertEqual(p.name(), w.Caption)
 
+    # https://docs.python.org/3/whatsnew/3.7.html#notable-changes-in-python-3-7-2
+    @unittest.skipIf((os.environ.get("VIRTUAL_ENV", False) and
+                    sys.version_info.major == 3 and
+                    sys.version_info.minor > 6),
+                    "Fail above 3.6")
     def test_exe(self):
         w = wmi.WMI().Win32_Process(ProcessId=self.pid)[0]
         p = psutil.Process(self.pid)
