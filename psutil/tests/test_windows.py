@@ -650,6 +650,7 @@ class TestDualProcessImplementation(TestCase):
 
 
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
+@unittest.skipIf(GITHUB_WHEELS and not PY3, "could not find interpreter with opposite bitness on github actions")
 class RemoteProcessTestCase(PsutilTestCase):
     """Certain functions require calling ReadProcessMemory.
     This trivially works when called on the current process.

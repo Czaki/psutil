@@ -51,6 +51,7 @@ from psutil.tests import terminate
 from psutil.tests import TestMemoryLeak
 from psutil.tests import TRAVIS
 from psutil.tests import unittest
+from psutil.tests import GITHUB_WHEELS
 
 
 cext = psutil._psplatform.cext
@@ -334,7 +335,7 @@ class TestProcessDualImplementation(TestMemoryLeak):
 # system APIs
 # ===================================================================
 
-
+@unittest.skipIf(GITHUB_WHEELS, "Abort problem")
 class TestModuleFunctionsLeaks(TestMemoryLeak):
     """Test leaks of psutil module functions."""
 
