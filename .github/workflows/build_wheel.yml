@@ -4,19 +4,61 @@ on: [push, pull_request]
 
 jobs:
   windows_wheel:
-    name: version ${{ matrix.python }} ${{ matrix.bits }} ${{ matrix.test_part }}
+    name: version ${{ matrix.python }} ${{ matrix.test_group }}
     runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
-        python: [27, 35, 36, 37, 38]
+        python: [27, 36]
         bits: [32]
-        test_part: ["test_windows", "test_memleaks"]
+        test_part: ["test_memleaks"]
+        test_group: [0, 1, 2, 3]
     env:
       CIBW_BUILD: "cp${{ matrix.python }}*${{ matrix.bits }}"
       CIBW_TEST_COMMAND: python -Wa {project}/psutil/tests/runner.py ${{ matrix.test_part }}
       CIBW_TEST_EXTRAS: test
       CIBW_BEFORE_TEST: pip install ipython[all] 
+      TEST_GROUP: ${{ matrix.test_group }}
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v1
+      name: Install Python 3.7
+      with:
+        python-version: '3.7'
+
+    - name: Install Visual C++ for Python 2.7
+      if: ${{ matrix.python == 27 }}
+      run: |
+        choco install vcpython27 -f -y
+
+    - name: "install cibuildwheel"
+      run: pip install cibuildwheel==1.4.1
+
+    - name: build wheel
+      run: cibuildwheel .
+
+    - name: Upload wheels
+      uses: actions/upload-artifact@v1
+      with:
+        name: wheels2
+        path: wheelhouse
+
+  windows_wheel2:
+    name: version ${{ matrix.python }} ${{ matrix.test_part }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [27, 36]
+        bits: [32]
+        test_part: ["test_windows"]
+        test_group: [0, 1, 2, 3, 4, 5, 6, 7]
+    env:
+      CIBW_BUILD: "cp${{ matrix.python }}*${{ matrix.bits }}"
+      CIBW_TEST_COMMAND: python -Wa {project}/psutil/tests/runner.py ${{ matrix.test_part }}
+      CIBW_TEST_EXTRAS: test
+      CIBW_BEFORE_TEST: pip install ipython[all] 
+      TEST_GROUP: ${{ matrix.test_group }}
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-python@v1

@@ -82,7 +82,7 @@ def fewtimes_if_linux():
 # Process class
 # ===================================================================
 
-
+@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "0", "Skip non 0 test group")
 class TestProcessObjectLeaks(TestMemoryLeak):
     """Test leaks of Process class methods."""
 
@@ -266,6 +266,7 @@ class TestProcessObjectLeaks(TestMemoryLeak):
         self.execute(lambda: cext.proc_info(os.getpid()))
 
 
+@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "1", "Skip non test group")
 class TestTerminatedProcessLeaks(TestProcessObjectLeaks):
     """Repeat the tests above looking for leaks occurring when dealing
     with terminated processes raising NoSuchProcess exception.
@@ -319,7 +320,7 @@ class TestTerminatedProcessLeaks(TestProcessObjectLeaks):
 
             self.execute(call)
 
-
+@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "2", "Skip non 2 test group")
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
 class TestProcessDualImplementation(TestMemoryLeak):
 
@@ -334,7 +335,7 @@ class TestProcessDualImplementation(TestMemoryLeak):
 # system APIs
 # ===================================================================
 
-
+@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "3", "Skip non 3 test group")
 class TestModuleFunctionsLeaks(TestMemoryLeak):
     """Test leaks of psutil module functions."""
 
