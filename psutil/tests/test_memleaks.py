@@ -82,7 +82,7 @@ def fewtimes_if_linux():
 # Process class
 # ===================================================================
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "0", "Skip non 0 test group")
+@unittest.skipIf(not os.environ.get("TEST_SKIP_3", False) , "Skip good group")
 class TestProcessObjectLeaks(TestMemoryLeak):
     """Test leaks of Process class methods."""
 
@@ -266,7 +266,7 @@ class TestProcessObjectLeaks(TestMemoryLeak):
         self.execute(lambda: cext.proc_info(os.getpid()))
 
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "1", "Skip non test group")
+@unittest.skipIf(not os.environ.get("TEST_SKIP_3", False) , "Skip good group")
 class TestTerminatedProcessLeaks(TestProcessObjectLeaks):
     """Repeat the tests above looking for leaks occurring when dealing
     with terminated processes raising NoSuchProcess exception.
@@ -320,7 +320,7 @@ class TestTerminatedProcessLeaks(TestProcessObjectLeaks):
 
             self.execute(call)
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "2", "Skip non 2 test group")
+@unittest.skipIf(not os.environ.get("TEST_SKIP_3", False) , "Skip good group")
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
 class TestProcessDualImplementation(TestMemoryLeak):
 
@@ -334,42 +334,49 @@ class TestProcessDualImplementation(TestMemoryLeak):
 # ===================================================================
 # system APIs
 # ===================================================================
-
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "3", "Skip non 3 test group")
+@unittest.skipIf(os.environ.get("TEST_SKIP_3", False) , "Skip problematic group")
 class TestModuleFunctionsLeaks(TestMemoryLeak):
     """Test leaks of psutil module functions."""
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "0", "Skip not 0 test")
     def test_coverage(self):
         ns = system_namespace()
         ns.test_class_coverage(self, ns.all)
 
     # --- cpu
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "1", "Skip not 1 test")
     @fewtimes_if_linux()
     def test_cpu_count(self):  # logical
         self.execute(lambda: psutil.cpu_count(logical=True))
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "2", "Skip not 2 test")
     @fewtimes_if_linux()
     def test_cpu_count_physical(self):
         self.execute(lambda: psutil.cpu_count(logical=False))
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "3", "Skip not 3 test")
     @fewtimes_if_linux()
     def test_cpu_times(self):
         self.execute(psutil.cpu_times)
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "4", "Skip not 4 test")
     @fewtimes_if_linux()
     def test_per_cpu_times(self):
         self.execute(lambda: psutil.cpu_times(percpu=True))
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "5", "Skip not 5 test")
     @fewtimes_if_linux()
     def test_cpu_stats(self):
         self.execute(psutil.cpu_stats)
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "6", "Skip not 6 test")
     @fewtimes_if_linux()
     @unittest.skipIf(not HAS_CPU_FREQ, "not supported")
     def test_cpu_freq(self):
         self.execute(psutil.cpu_freq)
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "7", "Skip not 7 test")
     @unittest.skipIf(not WINDOWS, "WINDOWS only")
     def test_getloadavg(self):
         psutil.getloadavg()
@@ -377,27 +384,33 @@ class TestModuleFunctionsLeaks(TestMemoryLeak):
 
     # --- mem
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "8", "Skip not 8 test")
     def test_virtual_memory(self):
         self.execute(psutil.virtual_memory)
 
     # TODO: remove this skip when this gets fixed
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "9", "Skip not 9 test")
     @unittest.skipIf(SUNOS, "worthless on SUNOS (uses a subprocess)")
     def test_swap_memory(self):
         self.execute(psutil.swap_memory)
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "10", "Skip not 10 test")
     def test_pid_exists(self):
         times = FEW_TIMES if POSIX else self.times
         self.execute(lambda: psutil.pid_exists(os.getpid()), times=times)
 
     # --- disk
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "11", "Skip not 11 test")
     def test_disk_usage(self):
         times = FEW_TIMES if POSIX else self.times
         self.execute(lambda: psutil.disk_usage('.'), times=times)
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "12", "Skip not 12 test")
     def test_disk_partitions(self):
         self.execute(psutil.disk_partitions)
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "13", "Skip not 13 test")
     @unittest.skipIf(LINUX and not os.path.exists('/proc/diskstats'),
                      '/proc/diskstats not available on this Linux version')
     @fewtimes_if_linux()
@@ -406,17 +419,20 @@ class TestModuleFunctionsLeaks(TestMemoryLeak):
 
     # --- proc
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "14", "Skip not 14 test")
     @fewtimes_if_linux()
     def test_pids(self):
         self.execute(psutil.pids)
 
     # --- net
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "15", "Skip not 15 test")
     @fewtimes_if_linux()
     @unittest.skipIf(not HAS_NET_IO_COUNTERS, 'not supported')
     def test_net_io_counters(self):
         self.execute(lambda: psutil.net_io_counters(nowrap=False))
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "16", "Skip not 16 test")
     @fewtimes_if_linux()
     @unittest.skipIf(MACOS and os.getuid() != 0, "need root access")
     def test_net_connections(self):
@@ -425,27 +441,32 @@ class TestModuleFunctionsLeaks(TestMemoryLeak):
         with create_sockets():
             self.execute(lambda: psutil.net_connections(kind='all'))
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "17", "Skip not 17 test")
     def test_net_if_addrs(self):
         # Note: verified that on Windows this was a false positive.
         tolerance = 80 * 1024 if WINDOWS else self.tolerance
         self.execute(psutil.net_if_addrs, tolerance=tolerance)
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "18", "Skip not 18 test")
     # @unittest.skipIf(TRAVIS, "EPERM on travis")
     def test_net_if_stats(self):
         self.execute(psutil.net_if_stats)
 
     # --- sensors
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "19", "Skip not 19 test")
     @fewtimes_if_linux()
     @unittest.skipIf(not HAS_SENSORS_BATTERY, "not supported")
     def test_sensors_battery(self):
         self.execute(psutil.sensors_battery)
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "20", "Skip not 20 test")
     @fewtimes_if_linux()
     @unittest.skipIf(not HAS_SENSORS_TEMPERATURES, "not supported")
     def test_sensors_temperatures(self):
         self.execute(psutil.sensors_temperatures)
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "21", "Skip not 21 test")
     @fewtimes_if_linux()
     @unittest.skipIf(not HAS_SENSORS_FANS, "not supported")
     def test_sensors_fans(self):
@@ -453,31 +474,36 @@ class TestModuleFunctionsLeaks(TestMemoryLeak):
 
     # --- others
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "22", "Skip not 22 test")
     @fewtimes_if_linux()
     def test_boot_time(self):
         self.execute(psutil.boot_time)
 
+    @unittest.skipIf(os.environ.get("TEST", "-1") != "23", "Skip not 23 test")
     def test_users(self):
         self.execute(psutil.users)
 
     if WINDOWS:
 
         # --- win services
-
+        @unittest.skipIf(os.environ.get("TEST", "-1") != "24", "Skip not 24 test")
         def test_win_service_iter(self):
             self.execute(cext.winservice_enumerate)
 
         def test_win_service_get(self):
             pass
 
+        @unittest.skipIf(os.environ.get("TEST", "-1") != "25", "Skip not 25 test")
         def test_win_service_get_config(self):
             name = next(psutil.win_service_iter()).name()
             self.execute(lambda: cext.winservice_query_config(name))
 
+        @unittest.skipIf(os.environ.get("TEST", "-1") != "26", "Skip not 26 test")
         def test_win_service_get_status(self):
             name = next(psutil.win_service_iter()).name()
             self.execute(lambda: cext.winservice_query_status(name))
 
+        @unittest.skipIf(os.environ.get("TEST", "-1") != "27", "Skip not 27 test")
         def test_win_service_get_description(self):
             name = next(psutil.win_service_iter()).name()
             self.execute(lambda: cext.winservice_query_descr(name))

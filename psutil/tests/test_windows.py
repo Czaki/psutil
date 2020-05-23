@@ -76,7 +76,6 @@ class TestCase(PsutilTestCase):
 # System APIs
 # ===================================================================
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "0", "Skip non 0 test group")
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
 class TestCpuAPIs(TestCase):
 
@@ -123,7 +122,6 @@ class TestCpuAPIs(TestCase):
         self.assertEqual(proc.CurrentClockSpeed, psutil.cpu_freq().current)
         self.assertEqual(proc.MaxClockSpeed, psutil.cpu_freq().max)
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "1", "Skip non 1 test group")
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
 class TestSystemAPIs(TestCase):
 
@@ -263,7 +261,6 @@ class TestSystemAPIs(TestCase):
 # sensors_battery()
 # ===================================================================
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "2", "Skip non 2 test group")
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
 class TestSensorsBattery(TestCase):
 
@@ -328,7 +325,6 @@ class TestSensorsBattery(TestCase):
 # Process APIs
 # ===================================================================
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "3", "Skip non 3 test group")
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
 class TestProcess(PsutilTestCase):
 
@@ -521,7 +517,6 @@ class TestProcess(PsutilTestCase):
         self.assertRaises(psutil.NoSuchProcess, proc.exe)
 
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "4", "Skip non 4 test group")
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
 class TestProcessWMI(TestCase):
     """Compare Process API results with WMI."""
@@ -607,7 +602,6 @@ class TestProcessWMI(TestCase):
         self.assertEqual(wmic_create, psutil_create)
 
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "5", "Skip non 5 test group")
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
 class TestDualProcessImplementation(TestCase):
     """
@@ -690,7 +684,7 @@ class TestDualProcessImplementation(TestCase):
             else:
                 self.assertEqual(a, b)
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "6", "Skip non 6 test group")
+
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
 class RemoteProcessTestCase(PsutilTestCase):
     """Certain functions require calling ReadProcessMemory.
@@ -786,7 +780,7 @@ class RemoteProcessTestCase(PsutilTestCase):
 # Windows services
 # ===================================================================
 
-@unittest.skipIf(os.environ.get("TEST_GROUP", "-1") != "7", "Skip non 7 test group")
+
 @unittest.skipIf(not WINDOWS, "WINDOWS only")
 class TestServices(TestCase):
 
